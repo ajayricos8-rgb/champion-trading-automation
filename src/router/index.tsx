@@ -35,6 +35,7 @@ import { createBrowserRouter, RouteObject } from 'react-router-dom';
 import App from '../App';
 import { DiscoverPage, BotsPage, PositionsPage, SettingsPage, ConfigEndpointPage } from '../pages';
 import { LoginPage } from '../pages/LoginPage';
+import Callback from '../pages/Callback';
 
 // Define routes
 export const routes: RouteObject[] = [
@@ -74,8 +75,12 @@ export const routes: RouteObject[] = [
     path: '/login',
     element: <LoginPage />,
   },
+  // OAuth callback route (Deriv redirects here after login)
+  {
+    path: '/callback',
+    element: <Callback />,
+  },
 ];
-
 // Create router
 export const router = createBrowserRouter(routes);
 
