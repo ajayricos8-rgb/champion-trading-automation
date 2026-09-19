@@ -1,8 +1,11 @@
 // src/services/oauth/oauthService.ts
 
-const APP_ID = import.meta.env.VITE_DERIV_APP_ID;
-const REDIRECT_URI = import.meta.env.VITE_DERIV_REDIRECT_URI;
-const OAUTH_URL = import.meta.env.VITE_DERIV_OAUTH_URL;
+const APP_ID = import.meta.env.VITE_DERIV_APP_ID || '34r1Xqxkm0tLGdNmBQJAP';
+const OAUTH_URL = 'https://oauth.deriv.com/oauth2/authorize';
+
+function getRedirectUri(): string {
+  return import.meta.env.VITE_DERIV_REDIRECT_URI || `${window.location.origin}/callback`;
+}
 
 const STORAGE_KEY = 'deriv_auth';
 
@@ -19,12 +22,8 @@ class OAuthService {
    * After login, Deriv will redirect them back to REDIRECT_URI
    */
   public initiateLogin(): void {
-    if (!APP_ID || !REDIRECT_URI) {
-      console.error('Missing VITE_DERIV_APP_ID or VITE_DERIV_REDIRECT_URI');
-      return;
-    }
-
-    const authUrl = `${OAUTH_URL}?app_id=${APP_ID}&l=en&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+    const redirectUri = getRedirectUri();
+    const authUrl = `${OAUTH_URL}?app_id=${encodeURIComponent(APP_ID)}&l=en&redirect_uri=${encodeURIComponent(redirectUri)}`;
     window.location.href = authUrl;
   }
 
