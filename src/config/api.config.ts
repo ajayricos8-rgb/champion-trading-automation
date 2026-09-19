@@ -34,7 +34,7 @@ export const API_CONFIG = {
   // Champion API specific configuration
   CHAMPION_TOKEN: import.meta.env.VITE_CHAMPION_TOKEN || 'champion_trading_automation',
   ACCOUNT_UUID: import.meta.env.VITE_ACCOUNT_UUID || 'account_uuid',
-  CHAMPION_API_URL: import.meta.env.VITE_CHAMPION_API_URL || 'http://mobile-backend-service-mock-gray:3000',
+  CHAMPION_API_URL: import.meta.env.VITE_CHAMPION_API_URL || import.meta.env.VITE_API_URL || '',
 }
 
 export const API_ENDPOINTS = {

@@ -31,7 +31,7 @@
  *            error handling and fallback values for robustness.
  */
 import { BalanceData, ExternalAPIHeaders } from '../../types/balance';
-import { API_ENDPOINTS } from '../../config/api.config';
+import { API_CONFIG, API_ENDPOINTS } from '../../config/api.config';
 import { apiService } from '../api/apiService';
 
 /**
@@ -59,7 +59,7 @@ class BalanceService {
    */
   async fetchInitialBalance(): Promise<BalanceData> {
     try {
-      const fullUrl = `https://mock.mobile-bot.deriv.dev/${API_ENDPOINTS.BALANCE}`;
+      const fullUrl = `${API_CONFIG.CHAMPION_API_URL}${API_ENDPOINTS.BALANCE}`;
       const headers: ExternalAPIHeaders = {};
       
       const data: InitialBalanceResponse = await apiService.get<InitialBalanceResponse>(
@@ -130,7 +130,7 @@ class BalanceService {
    * @returns The configured balance stream URL
    */
   getBalanceStreamUrl(): string {
-    return `https://mock.mobile-bot.deriv.dev/${API_ENDPOINTS.BALANCE_STREAM}`;
+    return `${API_CONFIG.CHAMPION_API_URL}${API_ENDPOINTS.BALANCE_STREAM}`;
   }
 
   /**

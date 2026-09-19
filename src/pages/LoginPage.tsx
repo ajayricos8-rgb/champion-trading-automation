@@ -20,23 +20,17 @@
  * @dataFlow: Captures form input, updates auth state, redirects user
  */
 import { useState, useEffect } from 'react';
-import { Form, Input, Button, Typography, Alert, ConfigProvider, theme as antdTheme } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { Button, Typography, ConfigProvider, theme as antdTheme } from 'antd';
 import { useTheme } from '../contexts/ThemeContext';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { oauthService } from '../services/oauth/oauthService';
 import logoSvg from '../assets/favicon.svg';
 import '../styles/login.scss';
 
 const { Title } = Typography;
 
 export function LoginPage() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [formVisible, setFormVisible] = useState(false);
-  const { setAuthParams, setAuthorizeResponse } = useAuth();
   const { effectiveTheme } = useTheme();
-  const navigate = useNavigate();
 
   // Animation effect when component mounts
   useEffect(() => {
@@ -46,50 +40,8 @@ export function LoginPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSubmit = (values: { username: string; password: string }) => {
-    setLoading(true);
-    setError(null);
-    
-    // Simulate API call delay
-    setTimeout(() => {
-      try {
-        // Generate mock auth response - accepts any credentials
-        const mockAuthParams = {
-          token1: 'mock-token-123456',
-          loginid: values.username,
-        };
-        
-        const mockAuthorizeResponse = {
-          msg_type: 'authorize' as 'authorize',
-          authorize: {
-            email: `${values.username}@example.com`,
-            currency: 'USD',
-            balance: 10000,
-            loginid: values.username,
-            fullname: `${values.username} User`,
-            token1: 'mock-token-123456',
-            account_list: [
-              {
-                loginid: values.username,
-                currency: 'USD',
-                balance: 10000,
-              }
-            ]
-          }
-        };
-        
-        // Update auth state
-        setAuthParams(mockAuthParams);
-        setAuthorizeResponse(mockAuthorizeResponse);
-        
-        // Redirect to home page
-        navigate('/');
-      } catch (err) {
-        setError('An unexpected error occurred. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    }, 1000);
+  const handleLogin = () => {
+    oauthService.initiateLogin();
   };
 
   return (
@@ -119,57 +71,15 @@ export function LoginPage() {
             Champion Trading
           </Title>
           
-          {error && (
-            <Alert
-              message="Login Error"
-              description={error}
-              type="error"
-              showIcon
-              className="login-error"
-            />
-          )}
-          
-          <Form
-            name="login"
-            layout="vertical"
-            onFinish={handleSubmit}
-            autoComplete="off"
-            className="login-form"
+          <Button
+            type="primary"
+            onClick={handleLogin}
+            className="login-button"
+            block
             size="large"
           >
-            <Form.Item
-              name="username"
-              rules={[{ required: true, message: 'Please enter your username' }]}
-            >
-              <Input 
-                prefix={<UserOutlined />} 
-                placeholder="Username" 
-                autoFocus
-              />
-            </Form.Item>
-            
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: 'Please enter your password' }]}
-            >
-              <Input.Password 
-                prefix={<LockOutlined />} 
-                placeholder="Password" 
-              />
-            </Form.Item>
-            
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loading}
-                className="login-button"
-                block
-              >
-                {loading ? 'Logging in...' : 'Log in'}
-              </Button>
-            </Form.Item>
-          </Form>
+            Log in with Deriv
+          </Button>
         </div>
       </div>
     </ConfigProvider>
