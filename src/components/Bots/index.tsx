@@ -34,6 +34,7 @@ export function Bots() {
 
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeBotTab, setActiveBotTab] = useState<"my" | "alpha" | "premium">("my");
   
   // State for strategy drawer
   const [isStrategyDrawerOpen, setIsStrategyDrawerOpen] = useState(false);
@@ -546,9 +547,40 @@ export function Bots() {
             />
           )}
         </div>
-      </div>
+  </div>
 
-      {searchVisible && (
+  <div className="bots-tabs" role="tablist" aria-label="Bot categories">
+    <button
+      type="button"
+      role="tab"
+      aria-selected={activeBotTab === "my"}
+      className={`bots-tab ${activeBotTab === "my" ? "bots-tab--active" : ""}`}
+      onClick={() => setActiveBotTab("my")}
+    >
+      My bots
+    </button>
+    <button
+      type="button"
+      role="tab"
+      aria-selected={activeBotTab === "alpha"}
+      className={`bots-tab ${activeBotTab === "alpha" ? "bots-tab--active" : ""}`}
+      onClick={() => setActiveBotTab("alpha")}
+    >
+      Alpha bots
+    </button>
+    <button
+      type="button"
+      role="tab"
+      aria-selected={activeBotTab === "premium"}
+      className={`bots-tab ${activeBotTab === "premium" ? "bots-tab--active" : ""}`}
+      onClick={() => setActiveBotTab("premium")}
+    >
+      Premium bots
+    </button>
+  </div>
+
+  {searchVisible && (
+
         <div className="search-overlay">
           <div className="search-container">
             <div className="search-input-wrapper">
@@ -581,7 +613,8 @@ export function Bots() {
         </div>
       )}
 
-      <div className="bots-list">
+      {activeBotTab === "my" ? (
+        <div className="bots-list">
         {bots.length > 0 ? (
           bots.map((bot: Bot) => (
             <BotCard
@@ -609,7 +642,10 @@ export function Bots() {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      ) : (
+        <div className="bots-list" aria-live="polite" />
+      )}
 
       {/* Strategy Drawer for editing bots */}
       {isStrategyDrawerOpen && selectedStrategy && selectedBot && (
