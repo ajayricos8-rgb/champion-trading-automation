@@ -24,7 +24,14 @@ class OAuthService {
   public initiateLogin(): void {
     const redirectUri = getRedirectUri();
     const authUrl = `${OAUTH_URL}?app_id=${encodeURIComponent(APP_ID)}&l=en&redirect_uri=${encodeURIComponent(redirectUri)}`;
-    window.location.href = authUrl;
+
+    // Deriv does not allow its OAuth page to render inside an iframe. The v0
+    // preview is iframe-based, so navigate the top-level browsing context.
+    if (window.top && window.top !== window) {
+      window.top.location.assign(authUrl);
+    } else {
+      window.location.assign(authUrl);
+    }
   }
 
   /**
